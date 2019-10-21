@@ -22,17 +22,21 @@
 
 import os
 from sheetfu import SpreadsheetApp
+import mysql.connector
+from mysql.connector import Error
 
 # Assign all ENVIRONMENT VARIABLES
 SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
 SERVICE_ACCESS_FILE = os.environ['SERVICE_ACCESS_FILE']
 MYSQL_HOST = os.environ['MYSQL_HOST']
+MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
 MYSQL_ID = os.environ['MYSQL_UID']
 MYSQL_PWD = os.environ['MYSQL_PWD']
 
 print(SPREADSHEET_ID)
 print(SERVICE_ACCESS_FILE)
 print(MYSQL_HOST)
+print(MYSQL_DATABASE)
 print(MYSQL_ID)
 print(MYSQL_PWD)
 
@@ -57,6 +61,7 @@ invoice_values = invoice_data_range.get_values()              # returns a 2D mat
 customer_values = customer_data_range.get_values()
 settings_values = settings_data_range.get_values()
 
+'''
 print("\n==========================")
 print(invoice_values)
 
@@ -65,3 +70,24 @@ print(customer_values)
 
 print("\n==========================\n")
 print(settings_values)
+'''
+
+# MySQL Connection
+try:
+    connection = mysql.connector.connect(host=MYSQL_HOST, database=MYSQL_DATABASE, user=MYSQL_ID, password=MYSQL_PWD)
+
+    if connection.is_connected():
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version: ", db_Info)
+        cursor = connection.cursor()
+        cursor.execute("select database();")
+        record = cursor.fetchone()
+        print("You are connected to database: ", record)
+
+except Error as e:
+    print("Error while connecting to MySQL", e)
+finally:
+    if (connection.is_connected()):
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
