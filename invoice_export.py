@@ -26,19 +26,28 @@ import mysql.connector
 from mysql.connector import Error
 
 # Assign all ENVIRONMENT VARIABLES
-SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
-SERVICE_ACCESS_FILE = os.environ['SERVICE_ACCESS_FILE']
-MYSQL_HOST = os.environ['MYSQL_HOST']
-MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
-MYSQL_ID = os.environ['MYSQL_UID']
-MYSQL_PWD = os.environ['MYSQL_PWD']
+try: 
+    #print("Checking ENVIRONMENT variables...") 
+    SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
+    SERVICE_ACCESS_FILE = os.environ['SERVICE_ACCESS_FILE']
+    MYSQL_HOST = os.environ['MYSQL_HOST']
+    MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
+    MYSQL_ID = os.environ['MYSQL_UID']
+    MYSQL_PWD = os.environ['MYSQL_PWD']
+    #Dummy environment variable
+    #MTEST = os.environ['MTEST']
+    #print("All environment variables are set.")
+except KeyError:  
+    print("One or more Environment variables do not exist")
 
-print(SPREADSHEET_ID)
-print(SERVICE_ACCESS_FILE)
-print(MYSQL_HOST)
-print(MYSQL_DATABASE)
-print(MYSQL_ID)
-print(MYSQL_PWD)
+# Debug to make sure the ENVIRONMENT variables are set.
+
+#print(SPREADSHEET_ID)
+#print(SERVICE_ACCESS_FILE)
+#print(MYSQL_HOST)
+#print(MYSQL_DATABASE)
+#print(MYSQL_ID)
+#print(MYSQL_PWD)
 
 spreadsheet = SpreadsheetApp(SERVICE_ACCESS_FILE).open_by_id(SPREADSHEET_ID)
 
