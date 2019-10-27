@@ -21,34 +21,40 @@
 #    MYSQL_PWD
 
 import os
+import sys
 from sheetfu import SpreadsheetApp
 import mysql.connector
 from mysql.connector import Error
 
-# Assign all ENVIRONMENT VARIABLES
-try: 
-    #print("Checking ENVIRONMENT variables...") 
-    SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
-    SERVICE_ACCESS_FILE = os.environ['SERVICE_ACCESS_FILE']
-    MYSQL_HOST = os.environ['MYSQL_HOST']
-    MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
-    MYSQL_ID = os.environ['MYSQL_UID']
-    MYSQL_PWD = os.environ['MYSQL_PWD']
-    #Dummy environment variable
-    #MTEST = os.environ['MTEST']
-    #print("All environment variables are set.")
-except KeyError:  
-    print("One or more Environment variables do not exist")
+env_vars = ['SPREADSHEET_ID', 'SERVICE_ACCESS_FILE', 'MYSQL_HOST', 'MYSQL_DATABASE',
+            'MYSQL_UID', 'MYSQL_PWD']
 
-# Debug to make sure the ENVIRONMENT variables are set.
+# Check and Assign ENVIRONMENT VARIABLES
+print("Checking if all environment variables are set..", end='.')
 
-#print(SPREADSHEET_ID)
-#print(SERVICE_ACCESS_FILE)
-#print(MYSQL_HOST)
-#print(MYSQL_DATABASE)
-#print(MYSQL_ID)
-#print(MYSQL_PWD)
+missing = set(env_vars) - set(os.environ)
+if missing:
+    print("\nEnvironment variables that do not exist: %s" % missing)
+    sys.exit()
+else:
+    print("OK.")
+    try: 
+        SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
+        SERVICE_ACCESS_FILE = os.environ['SERVICE_ACCESS_FILE']
+        MYSQL_HOST = os.environ['MYSQL_HOST']
+        MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
+        MYSQL_ID = os.environ['MYSQL_UID']
+        MYSQL_PWD = os.environ['MYSQL_PWD']
 
+    except KeyError:  
+        print("A problem with one of the environment variables exists.")
+        print("Exiting")
+        sys.exit()
+
+# Add try block to handle case where SERVICE_ACCESS_FILE or SPREADSHEET_ID
+# do not exist, or incorrect.  
+# Add a fileExists check for SERVICE_ACCESS_FILE ?
+# Add HttpError if spreadsheet does not exist ?
 spreadsheet = SpreadsheetApp(SERVICE_ACCESS_FILE).open_by_id(SPREADSHEET_ID)
 
 # If necessary to iterate through spreadsheet
@@ -57,20 +63,19 @@ spreadsheet = SpreadsheetApp(SERVICE_ACCESS_FILE).open_by_id(SPREADSHEET_ID)
 
 # Deliberately hardcoding the sheet names and ranges
 invoice_sheet = spreadsheet.get_sheet_by_name('Invoice')
-invoice_data_range = invoice_sheet.get_range_from_a1(a1_notification='A4:R14')
+invoice_data_range = invoice_sheet.get_range_from_a1('A4:R14')
 
 customer_sheet = spreadsheet.get_sheet_by_name('Customer_Info')
 customer_data_range = customer_sheet.get_range_from_a1('A4:R10')
 
 settings_sheet = spreadsheet.get_sheet_by_name('Settings')
-settings_data_range = settings_sheet.get_range_from_a1('A2:B10')
+settings_data_range = settings_sheet.get_range_from_a1('A2:B9')
 
 # Obtain values from ranges
-invoice_values = invoice_data_range.get_values()              # returns a 2D matrix of values
+invoice_values = invoice_data_range.get_values()        # returns a 2D matrix of values
 customer_values = customer_data_range.get_values()
 settings_values = settings_data_range.get_values()
 
-'''
 print("\n==========================")
 print(invoice_values)
 
@@ -79,7 +84,7 @@ print(customer_values)
 
 print("\n==========================\n")
 print(settings_values)
-'''
+
 
 # MySQL Connection
 try:
@@ -93,6 +98,13 @@ try:
         record = cursor.fetchone()
         print("You are connected to database: ", record)
 
+        mySql_Item_Insert_Query = "INSERT INTO Item(description, id) VALUES(%s,%s)"
+        cursor = connection.cursor()
+        result = cursor.executemany(mySql_Item_Insert_Query, settings_values)
+        connection.commit()
+        print("Record inserted successfully into Item table")
+        cursor.close()
+
 except Error as e:
     print("Error while connecting to MySQL", e)
 finally:
@@ -100,3 +112,20 @@ finally:
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
+
+
+'''
+def main():
+   # books = [('Harry Potter And The Order Of The Phoenix', '9780439358071'),
+   #      ('Gone with the Wind', '9780446675536'),
+   #          ('Pride and Prejudice (Modern Library Classics)', '9780679783268')]
+    insert_item(settings_values)
+
+if __name__ == '__main__':
+    main()
+
+def insert_item(description, id):
+    query = "INSERT INTO books(description, id) " \
+            "VALUES(%s,%s)"
+    args = (description, id)
+'''

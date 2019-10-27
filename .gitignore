@@ -1,4 +1,5 @@
 service_access.json
+# settings.sh is where the SPREADSHEET_ID, HOST, DATABASE, USER_ID, and USER_PWD are set. 
 settings.sh
 quickstart.py
 .vscode
