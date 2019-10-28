@@ -30,7 +30,7 @@ if missing:
     print("\nEnvironment variables that do not exist: %s" % missing)
     sys.exit()
 else:
-    print("OK.")
+    print("COMPLETE")
     try: 
         MYSQL_HOST = os.environ['MYSQL_HOST']
         MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
@@ -59,7 +59,7 @@ try:
         connection.commit()
         print("COMPLETE [", datetime.now(), "]")
 
-        print("Clearing Invoice data...", end=".")
+        print("Clearing Invoice data....", end=".")
         cursor.execute("DELETE from Invoice;")
         connection.commit()
         print("COMPLETE [", datetime.now(), "]")
@@ -70,4 +70,4 @@ finally:
     if (connection.is_connected()):
         cursor.close()
         connection.close()
-        print("MySQL connection is closed")
+        print("MySQL connection is CLOSED")
