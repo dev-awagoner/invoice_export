@@ -3,3 +3,4 @@ service_access.json
 settings.sh
 quickstart.py
 .vscode
+test/

@@ -30,6 +30,10 @@ from mysql.connector import Error
 env_vars = ['SPREADSHEET_ID', 'SERVICE_ACCESS_FILE', 'MYSQL_HOST', 'MYSQL_DATABASE',
             'MYSQL_UID', 'MYSQL_PWD']
 
+SETTINGS_START = "A1"  #zero-based
+CUSTOMER_START = "A3"  
+INVOICE_START = "A3"
+
 # Check and Assign ENVIRONMENT VARIABLES
 print("Checking if all environment variables are set..", end='.')
 
