@@ -27,12 +27,12 @@ from sheetfu import SpreadsheetApp
 import mysql.connector
 from mysql.connector import Error
 
+SETTINGS_START = "A2"  
+CUSTOMER_START = "A4"  
+INVOICE_START = "A4"
+
 env_vars = ['SPREADSHEET_ID', 'SERVICE_ACCESS_FILE', 'MYSQL_HOST', 'MYSQL_DATABASE',
             'MYSQL_UID', 'MYSQL_PWD']
-
-SETTINGS_START = "A1"  #zero-based
-CUSTOMER_START = "A3"  
-INVOICE_START = "A3"
 
 # Check and Assign ENVIRONMENT VARIABLES
 print("Checking if all environment variables are set..", end='.')
@@ -69,8 +69,11 @@ spreadsheet = SpreadsheetApp(SERVICE_ACCESS_FILE).open_by_id(SPREADSHEET_ID)
 # Deliberately hardcoding the Invoice sheet name and ranges (NEED TO DETERMINE RANGE)
 # Invoice Sheet
 invoice_sheet = spreadsheet.get_sheet_by_name('Invoice')
-invoice_data_range = invoice_sheet.get_range_from_a1('A4:Q14')
+invoice_sheet_range = str(invoice_sheet.get_data_range())
+invoice_end_cell = invoice_sheet_range[(invoice_sheet_range.find(':')+1):-1]
+invoice_data_range = invoice_sheet.get_range_from_a1('A4:' + invoice_end_cell)
 invoice_values = invoice_data_range.get_values()    # returns a 2D matrix of values
+#print(invoice_values)
 
 # Change INVOICE DATEs format (DD/MM?YYY -> YYYY/MM/DD) to import into MySQL date column
 for row in invoice_values:
@@ -79,8 +82,11 @@ for row in invoice_values:
 # Deliberately hardcoding the Customer sheet name and ranges (NEED TO DETERMINE RANGE)
 # Customer_Info Sheet
 customer_sheet = spreadsheet.get_sheet_by_name('Customer_Info')
-customer_data_range = customer_sheet.get_range_from_a1('A4:R10')
+customer_sheet_range = str(customer_sheet.get_data_range())
+customer_end_cell = customer_sheet_range[(customer_sheet_range.find(':')+1):-1]
+customer_data_range = customer_sheet.get_range_from_a1('A4:' + customer_end_cell)
 customer_values = customer_data_range.get_values()
+#print(customer_values)
 
 # Change CUSTOMER DATEs format (DD/MM?YYY -> YYYY/MM/DD) to import into MySQL date column
 for row in customer_values:
@@ -89,10 +95,16 @@ for row in customer_values:
 
 # Settings Sheet
 settings_sheet = spreadsheet.get_sheet_by_name('Settings')
+settings_sheet_range = str(settings_sheet.get_data_range())
+settings_end_cell = settings_sheet_range[(settings_sheet_range.find(':')+1):-1]
+settings_data_range = settings_sheet.get_range_from_a1('A2:' + settings_end_cell)
+settings_values = settings_data_range.get_values()
+#print(settings_values)
+
 settings_data_range = settings_sheet.get_range_from_a1('A2:B9')
 settings_values = settings_data_range.get_values()
 
-# DEBUG Values
+# DEBUG Code to verify *_values
 #print("\n==========================")
 #print(invoice_values)
 #print("\n==========================")
@@ -114,7 +126,7 @@ try:
         # print("You are connected to database: ", record)
         
         # Insert SETTINGS data
-        print("Inserting Settings data...", end=".")
+        print("Inserting Settings data..", end=".")
         Item_Insert_Query = "INSERT INTO settings(description, id) VALUES(%s,%s)"
         cursor = connection.cursor()
 
@@ -126,7 +138,7 @@ try:
         print("COMPLETE")
 
         # Insert CUSTOMER data
-        print("Inserting Customer data...", end=".")
+        print("Inserting Customer data..", end=".")
         Customer_Insert_Query = "INSERT INTO customer(cycle, start_date, end_date, item, price, " \
                                 "iva, total, customer_id, business_name, business_id, contact, address, " \
                                 "city, province, postcode, email, phone, phone2) " \
@@ -157,4 +169,4 @@ finally:
     if (connection.is_connected()):
         cursor.close()
         connection.close()
-        print("MySQL connection is closed")
+        #print("MySQL connection is closed")
