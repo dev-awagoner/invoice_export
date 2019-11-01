@@ -42,7 +42,6 @@ if missing:
     print("\nEnvironment variables that do not exist: %s" % missing)
     sys.exit()
 else:
-    print("COMPLETE")
     try: 
         SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
         SERVICE_ACCESS_FILE = os.environ['SERVICE_ACCESS_FILE']
@@ -50,6 +49,7 @@ else:
         MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
         MYSQL_ID = os.environ['MYSQL_UID']
         MYSQL_PWD = os.environ['MYSQL_PWD']
+        print("COMPLETE")
 
     except KeyError:  
         print("A problem with one of the environment variables exists.")
