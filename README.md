@@ -12,20 +12,20 @@ The current requirements are:
 The code works in the following manner:
 0.  Setup the various ENVIRONMENT VARIABLES and map those to python variables
 1.  Connecting to a specified Google Spreadsheet using the following environment variables:
-..1.1.  SPREADSHEET_ID
-..1.2.  SERVICE_ACCESS_FILE
+    1.  SPREADSHEET_ID
+    2.  SERVICE_ACCESS_FILE
 2.  Gather ranges (in the form of a list of lists) from the **Invoice**, **Customer_Info**, and **Settings** sheets
-2.1.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
-2.1.1.  The date columns in the sheets are **TEXT** fields, and not numbers
+    2.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
+        1.   The date columns in the sheets are **TEXT** fields, and not numbers
 3.  Connect to the MySQL database using environment variables:
-3.1.  MYSQL_HOST
-3.2.  MYSQL_DATABASE
-3.3.  MYSQL_UID
-3.4.  MYSQL_PWD
+    1.  MYSQL_HOST
+    2.  MYSQL_DATABASE
+    3.  MYSQL_UID
+    4.  MYSQL_PWD
 4.  The list of lists data (ranges) are then inserted into **existing** and **empty** database tables:
-4.1.  Settings
-4.2.  Customer
-4.3.  Invoice
+    1.  Settings
+    2.  Customer
+    3.  Invoice
 
 ## Exceptions and Errors
 This first pass of the code is not hardened for the myriad errors that can occur when connecting to Google Sheets or a MySQL database.  When something does fail, the error is normally straightforward.  If it's not
