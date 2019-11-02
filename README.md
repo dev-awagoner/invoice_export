@@ -15,8 +15,8 @@ The code works in the following manner:
     1.  SPREADSHEET_ID
     2.  SERVICE_ACCESS_FILE
 2.  Gather ranges (in the form of a list of lists) from the **Invoice**, **Customer_Info**, and **Settings** sheets
-    2.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
-        1.   The date columns in the sheets are **TEXT** fields, and not numbers
+    1.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
+    2.   The date columns in the sheets are **TEXT** fields, and not numbers
 3.  Connect to the MySQL database using environment variables:
     1.  MYSQL_HOST
     2.  MYSQL_DATABASE
