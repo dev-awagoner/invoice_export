@@ -12,8 +12,8 @@ The current requirements are:
 The code works in the following manner:
 0.  Setup the various ENVIRONMENT VARIABLES and map those to python variables
 1.  Connecting to a specified Google Spreadsheet using the following environment variables:
-1.1.  SPREADSHEET_ID
-1.2.  SERVICE_ACCESS_FILE
+..1.1.  SPREADSHEET_ID
+..1.2.  SERVICE_ACCESS_FILE
 2.  Gather ranges (in the form of a list of lists) from the **Invoice**, **Customer_Info**, and **Settings** sheets
 2.1.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
 2.1.1.  The date columns in the sheets are **TEXT** fields, and not numbers
