@@ -20,7 +20,6 @@
 #    MYSQL_UID
 #    MYSQL_PWD
 
-import functools
 import datetime
 import os
 import sys
@@ -68,33 +67,34 @@ env_vars = {
     #,'test': 'test'    # To test MISSING Environment Variable
 }
 
-# Checking existence of ENVIRONMENT VARIABLES and building CONFIG dictionaries
+# Checking existence of ENVIRONMENT VARIABLES and updating the dictionary
 print("Checking environment variables..", end='.')
-env_list = [ v for v in env_vars.values() ]
+#env_list = [ v for v in env_vars.values() ]
 
-missing = set(env_list) - set(os.environ)
+missing = set(env_vars.values()) - set(os.environ)
 if missing:
     print("\nEnvironment variables that are not set: %s" % missing)
     sys.exit()
 else:
     try:
-        env_config = {k: os.environ.get(v) for k, v in env_vars.items() if v in os.environ}
+        env_vars = {k: os.environ.get(v) for k, v in env_vars.items() if v in os.environ}
         
     except KeyError:  
         print("A problem with one or more of the environment variables exists...EXITING")
         sys.exit()
 
 # Create a dictionary subset of ENV_CONFIG for just the MySQL parameters
-db_config = {k: env_config[k] for k in env_config.keys() & {'host', 'database', 'user', 'password'}}
+db_config = {k: env_vars[k] for k in env_vars.keys() & {'host', 'database', 'user', 'password'}}
 print("COMPLETE")
 
-# Add try block to handle case where SERVICE_ACCESS_FILE or SPREADSHEET_ID do not exist, or are  incorrect?  
+# Add try block to handle case where SERVICE_ACCESS_FILE or SPREADSHEET_ID do not exist, or are incorrect?  
 # Add a fileExists check for SERVICE_ACCESS_FILE ?
 # Add HttpError if spreadsheet does not exist ?
 
 print("Connecting to Spreadsheet..", end='.')
-spreadsheet = SpreadsheetApp(env_config.get('service_access_file')).open_by_id(env_config.get('sheet_id'))
+spreadsheet = SpreadsheetApp(env_vars.get('service_access_file')).open_by_id(env_vars.get('sheet_id'))
 print("CONNECTED")
+
 # If necessary to iterate through spreadsheet
 #sheets = spreadsheet.get_sheets()
 #for entries in sheets:print(entries)
