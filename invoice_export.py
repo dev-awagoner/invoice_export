@@ -11,12 +11,14 @@
 #
 # * Proper credentials and access has been done on the Google side:
 #    - https://console.developers.google.com (creation of Service account)
+#    - Service account credentials (JSON) downloaded to a known directory
 #    - Service User email created in above step is given access (via Sharing) to the Sheet 
 #  
 # ENVIRONMENT VARIABLES
 #    SPREADSHEET_ID
 #    SERVICE_ACCESS_FILE
 #    MYSQL_HOST
+#    MYSQL_DATABASE
 #    MYSQL_UID
 #    MYSQL_PWD
 
@@ -27,7 +29,7 @@ from sheetfu import SpreadsheetApp
 import mysql.connector
 from mysql.connector import Error
 
-class UseDatabase:
+class DatabaseConnect:
     def __init__(self, config: dict):
         self.configuration = config
 
@@ -64,12 +66,10 @@ env_vars = {
     'database': 'MYSQL_DATABASE',
     'user': 'MYSQL_UID',
     'password': 'MYSQL_PWD'
-    #,'test': 'test'    # To test MISSING Environment Variable
 }
 
 # Checking existence of ENVIRONMENT VARIABLES and updating the dictionary
 print("Checking environment variables..", end='.')
-#env_list = [ v for v in env_vars.values() ]
 
 missing = set(env_vars.values()) - set(os.environ)
 if missing:
@@ -144,7 +144,7 @@ settings_values.pop(0)
 #print(settings_values)
 
 
-with UseDatabase(db_config) as cursor:
+with DatabaseConnect(db_config) as cursor:
     # Insert SETTINGS data
     print("Inserting Settings data..", end=".")
     Item_Insert_Query = "INSERT INTO settings(description, id) VALUES(%s,%s)"
