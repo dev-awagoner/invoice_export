@@ -1,7 +1,7 @@
 # Google Sheets export to MySQL
-A project to export a known Google Spreadsheet to a known MySQL database
+A project to export sheets from a known Google Spreadsheet to a known MySQL database.
 
-The assumption is that none of the USERIDs, passwords, connections will be hard-coded, but will use environment variables on the local system.
+The assumption is that none of the USERIDs, passwords, connections will be hard-coded.  The code will use environment variables on the local system.
 
 ## Requirements
 The current requirements are:
@@ -15,8 +15,8 @@ The code works in the following manner:
     1.  SPREADSHEET_ID
     2.  SERVICE_ACCESS_FILE
 3.  Gather ranges (in the form of a list of lists) from the **Invoice**, **Customer_Info**, and **Settings** sheets
-    1.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
-    2.   The date columns in the sheets are **TEXT** fields, and not numbers
+    1.  Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
+    2.  The date columns in the sheets are **TEXT** fields, and not numbers
 4.  Connect to the MySQL database using the db_config dictionary with the following keys:
     1.  MYSQL_HOST
     2.  MYSQL_DATABASE
