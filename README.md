@@ -10,14 +10,14 @@ The current requirements are:
 
 ## Workflow
 The code works in the following manner:
-1.  Setup the various ENVIRONMENT VARIABLES and map those to python variables
-2.  Connecting to a specified Google Spreadsheet using the following environment variables:
+1.  Setup the various ENVIRONMENT VARIABLES and map those to a dictionary
+2.  Connecting to a specified Google Spreadsheet using the following dictionary keys:
     1.  SPREADSHEET_ID
     2.  SERVICE_ACCESS_FILE
 3.  Gather ranges (in the form of a list of lists) from the **Invoice**, **Customer_Info**, and **Settings** sheets
     1.   Modify **date** fields in the lists to conform to MySQL format (YYYY/MM/DD)
     2.   The date columns in the sheets are **TEXT** fields, and not numbers
-4.  Connect to the MySQL database using environment variables:
+4.  Connect to the MySQL database using the db_config dictionary with the following keys:
     1.  MYSQL_HOST
     2.  MYSQL_DATABASE
     3.  MYSQL_UID
