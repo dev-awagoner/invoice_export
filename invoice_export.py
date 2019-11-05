@@ -105,7 +105,7 @@ invoice_sheet = spreadsheet.get_sheet_by_name('Invoice')
 invoice_sheet_range = invoice_sheet.get_data_range()
 invoice_values = invoice_sheet_range.get_values()   # returns a 2d matrix of lists
 
-# Ugly, but it's necessary to remove 3 header columns
+# Faster than a slice (invoice_values[2:-1]).  It's necessary to remove the 3 header columns.
 invoice_values.pop(0); invoice_values.pop(0); invoice_values.pop(0)
 
 # Change INVOICE DATEs format (DD/MM?YYY -> YYYY/MM/DD) to import into MySQL date column
@@ -118,7 +118,7 @@ customer_sheet = spreadsheet.get_sheet_by_name('Customer_Info')
 customer_sheet_range = customer_sheet.get_data_range()
 customer_values = customer_sheet_range.get_values()
 
-# Ugly, but it's necessary to remove 3 header columns
+# Faster than a slice (customer_values[2:-1]).  It's necessary to remove the 3 header columns.
 customer_values.pop(0); customer_values.pop(0); customer_values.pop(0)
 
 # Change CUSTOMER DATEs format (DD/MM?YYY -> YYYY/MM/DD) to import into MySQL date column
@@ -132,7 +132,7 @@ settings_sheet = spreadsheet.get_sheet_by_name('Settings')
 settings_sheet_range = settings_sheet.get_data_range()
 settings_values = settings_sheet_range.get_values()
 
-# Ugly, but it's necessary to remove 1 header column
+# Faster than a slice (invoice_values[1:-1]).  It's necessary to remove the single header column.
 settings_values.pop(0)
 
 # DEBUG Code to verify *_values
